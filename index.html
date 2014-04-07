@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js">
+	</script>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<video autoplay></video>
+	<canvas id="screenshot-canvas" style="display:none;" width="352" height="288"></canvas>
+	<img >
+	<button id="capture" style="display:none;">Take a Picture</button>
+	<button id="save" style="display:none;">Save in Dropbox</button>
+	<script>
+	var client = new Dropbox.Client({ key: "0oojgpkjslrqw36" });
+	//client.authDriver(new Dropbox.Drivers.Popup());
+	client.authenticate(function(error, client) {
+		if (error) {
+			console.log(error);
+			return error;
+		}
+		alert("auth ok");
+		navigator.getUserMedia  = navigator.getUserMedia ||
+		navigator.webkitGetUserMedia ||
+		navigator.mozGetUserMedia ||
+		navigator.msGetUserMedia;
+
+		var video = document.querySelector('video');
+		var errorCallback = function () {
+			alert("Sorry, error occured while obtaining video stream.");
+		}
+		var camLoaded = function () {
+			var capBtn = document.querySelector('#capture');
+			var saveBtn = document.querySelector('#save')
+			var video = document.querySelector('video');
+			var canvas = document.querySelector('canvas');
+			var ctx = canvas.getContext('2d');
+			capBtn.style.display = 'block';
+			saveBtn.style.display = 'block'
+			capBtn.onclick = function () {
+				snapshot();
+				return false;
+			}
+			capBtn.onclick = function () {
+				save();
+    	    	return false;
+			}
+			function snapshot () {
+				ctx.drawImage(video, 0, 0);
+				document.querySelector('img').src = canvas.toDataURL('image/png');
+			}
+			function save () {
+				var dataURL = document.querySelector('img').src;
+				var blobBin = atob(dataURL.split(',')[1]);
+				var array = [];
+				for(var i = 0; i < blobBin.length; i++) {
+					array.push(blobBin.charCodeAt(i));
+				}
+				var file=new Blob([new Uint8Array(array)], {type: 'image/png'});
+				client.writeFile(new Date()+".png", file, function(error, stat) {
+					if (error) {
+						console.log(error);
+    	    			return error;  // Something went wrong.
+    	    		}
+    	    		alert("File saved as revision " + stat.revisionTag);
+    	    	});
+			}
+		}
+		if (navigator.getUserMedia) {
+			navigator.getUserMedia({video: {
+				mandatory: {
+					maxWidth: 640,
+					maxHeight: 360
+				}
+			}}, function (stream) {
+				video.src = window.URL.createObjectURL(stream);
+				camLoaded();
+			}, errorCallback);
+		} else {
+  			video.src = 'somevideo.webm'; // fallback.
+  		}	
+  	});
+</script>
+</body>
+</html>

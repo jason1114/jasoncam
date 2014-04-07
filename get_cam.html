@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<video autoplay></video>
+<canvas id="screenshot-canvas" style="display:none;" width="352" height="288"></canvas>
+<img >
+<button id="capture" style="display:none;">Take a Picture</button>
+<button id="save" style="display:none;">Save in Dropbox</button>
+<script src="http://www.nihilogic.dk/labs/canvas2image/canvas2image.js"></script>
+<script>
+navigator.getUserMedia  = navigator.getUserMedia ||
+                          navigator.webkitGetUserMedia ||
+                          navigator.mozGetUserMedia ||
+                          navigator.msGetUserMedia;
+
+var video = document.querySelector('video');
+var errorCallback = function () {
+  alert("Sorry, error occured while obtaining video stream.");
+}
+var camLoaded = function () {
+  var capBtn = document.querySelector('#capture');
+  var saveBtn = document.querySelector('#save')
+  var video = document.querySelector('video');
+  var canvas = document.querySelector('canvas');
+  var ctx = canvas.getContext('2d');
+  capBtn.style.display = 'block';
+  saveBtn.style.display = 'block'
+  capBtn.onclick = function () {
+    snapshot();
+    return false;
+  }
+  function snapshot () {
+      ctx.drawImage(video, 0, 0);
+      // "image/webp" works in Chrome.
+      // Other browsers will fall back to image/png.
+      document.querySelector('img').src = canvas.toDataURL('image/webp');
+  }
+}
+if (navigator.getUserMedia) {
+  navigator.getUserMedia({video: {
+    mandatory: {
+      maxWidth: 640,
+      maxHeight: 360
+    }
+  }}, function (stream) {
+    video.src = window.URL.createObjectURL(stream);
+    camLoaded();
+  }, errorCallback);
+} else {
+  video.src = 'somevideo.webm'; // fallback.
+}
+</script>
+</body>
+</html>
