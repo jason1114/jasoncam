@@ -47,10 +47,12 @@
 				saveBtn.textContent = "Please Wait...";
     	    	return false;
 			}
+			// usedn to take a picutre
 			function snapshot () {
 				ctx.drawImage(video, 0, 0);
 				document.querySelector('img').src = canvas.toDataURL('image/png');
 			}
+			// save picture to Dropbox
 			function save () {
 				var dataURL = document.querySelector('img').src;
 				if(!dataURL){
@@ -74,6 +76,7 @@
     	    	});
 			}
 		}
+		// get user media, and begin to capture camera video stream
 		if (navigator.getUserMedia) {
 			navigator.getUserMedia({video: {
 				mandatory: {
