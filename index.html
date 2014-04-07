@@ -28,6 +28,7 @@
 		var errorCallback = function () {
 			alert("Sorry, error occured while obtaining video stream.");
 		}
+		// Callback when camera video stream captured
 		var camLoaded = function () {
 			var capBtn = document.querySelector('#capture');
 			var saveBtn = document.querySelector('#save')
@@ -42,6 +43,8 @@
 			}
 			saveBtn.onclick = function () {
 				save();
+				saveBtn.setAttribute("disabled","true");
+				saveBtn.textContent = "Please Wait...";
     	    	return false;
 			}
 			function snapshot () {
@@ -50,6 +53,10 @@
 			}
 			function save () {
 				var dataURL = document.querySelector('img').src;
+				if(!dataURL){
+					alert("Please take a picture first.");
+				}
+				// covert data URL to Blob and upload it
 				var blobBin = atob(dataURL.split(',')[1]);
 				var array = [];
 				for(var i = 0; i < blobBin.length; i++) {
@@ -57,11 +64,13 @@
 				}
 				var file=new Blob([new Uint8Array(array)], {type: 'image/png'});
 				client.writeFile(new Date()+".png", file, function(error, stat) {
+					saveBtn.removeAttribute("disabled");
+					saveBtn.textContent = "Save in Dropbox";
 					if (error) {
 						console.log(error);
     	    			return error;  // Something went wrong.
     	    		}
-    	    		alert("File saved as revision " + stat.revisionTag);
+    	    		alert("File saved successfully!");
     	    	});
 			}
 		}
