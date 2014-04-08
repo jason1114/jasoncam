@@ -35,8 +35,8 @@
 			var video = document.querySelector('video');
 			var canvas = document.querySelector('canvas');
 			var ctx = canvas.getContext('2d');
-			canvas.style.height = video.videoHeight;
-			canvas.style.width = video.videoWidth;
+			canvas.style.height = video.videoHeight + "px";
+			canvas.style.width = video.videoWidth + "px";
 			capBtn.style.display = 'block';
 			saveBtn.style.display = 'block'
 			capBtn.onclick = function () {
