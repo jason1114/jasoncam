@@ -37,6 +37,8 @@
 			var ctx = canvas.getContext('2d');
 			canvas.style.height = video.videoHeight + "px";
 			canvas.style.width = video.videoWidth + "px";
+			ctx.canvas.width  = video.videoWidth;
+		        ctx.canvas.height = video.videoHeight;
 			capBtn.style.display = 'block';
 			saveBtn.style.display = 'block'
 			capBtn.onclick = function () {
