@@ -35,10 +35,7 @@
 			var video = document.querySelector('video');
 			var canvas = document.querySelector('canvas');
 			var ctx = canvas.getContext('2d');
-			canvas.style.height = video.videoHeight + "px";
-			canvas.style.width = video.videoWidth + "px";
-			ctx.canvas.width  = video.videoWidth;
-		        ctx.canvas.height = video.videoHeight;
+			
 			capBtn.style.display = 'block';
 			saveBtn.style.display = 'block'
 			capBtn.onclick = function () {
@@ -53,6 +50,10 @@
 			}
 			// usedn to take a picutre
 			function snapshot () {
+				canvas.style.height = video.videoHeight + "px";
+				canvas.style.width = video.videoWidth + "px";
+				ctx.canvas.width  = video.videoWidth;
+		    	ctx.canvas.height = video.videoHeight;
 				ctx.drawImage(video, 0, 0);
 				document.querySelector('img').src = canvas.toDataURL('image/png');
 			}
